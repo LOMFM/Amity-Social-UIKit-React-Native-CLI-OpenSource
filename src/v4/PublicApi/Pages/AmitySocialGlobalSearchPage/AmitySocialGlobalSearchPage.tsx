@@ -9,6 +9,7 @@ import AmityCommunitySearchResultComponent from '../../Components/AmityCommunity
 import { PageID } from '../../../enum';
 import { useAmityPage } from '../../../hook';
 import AmityUserSearchResultComponent from '../../Components/AmityUserSearchResultComponent/AmityUserSearchResultComponent';
+import { useCustomComponent } from 'amity-react-native-social-ui-kit/src/v4/providers/ComponentsProvider';
 
 const AmitySocialGlobalSearchPage = () => {
   const pageId = PageID.social_global_search_page;
@@ -19,6 +20,7 @@ const AmitySocialGlobalSearchPage = () => {
   const { searchResult, onNextCommunityPage, onNextUserPage } =
     useAmityGlobalSearchViewModel(searchValue, searchType);
   const isCommunity = searchType === TabName.Communities;
+  const { AmityGlobalSearchAgentComponent } = useCustomComponent();
   if (isExcluded) return null;
   return (
     <SafeAreaView style={styles.container}>
@@ -37,6 +39,8 @@ const AmitySocialGlobalSearchPage = () => {
           searchResult={searchResult}
           onNextPage={onNextCommunityPage}
         />
+      ) : AmityGlobalSearchAgentComponent ? (
+        <AmityGlobalSearchAgentComponent searchTerm={searchValue} />
       ) : (
         <AmityUserSearchResultComponent
           pageId={pageId}

@@ -10,7 +10,9 @@ import { validateConfigColor } from '../util/colorUtil';
 import useValidateConfig from '../v4/hook/useValidateConfig';
 import fallBackConfig from '../../uikit.config.json';
 import { BehaviourProvider } from '../v4/providers/BehaviourProvider';
+import { CustomComponentProvider } from '../v4/providers/ComponentsProvider';
 import { IBehaviour } from '../v4/types/behaviour.interface';
+import { ICustomComponents } from '../v4/types/components.interface';
 import { lighten, parseToHsl, hslToColorString } from 'polished';
 
 export type CusTomTheme = typeof DefaultTheme;
@@ -24,6 +26,7 @@ export interface IAmityUIkitProvider {
   authToken?: string;
   configs?: IConfigRaw;
   behaviour?: IBehaviour;
+  components?: ICustomComponents;
   fcmToken?: string;
 }
 
@@ -60,6 +63,7 @@ export default function AmityUiKitProvider({
   configs,
   behaviour,
   fcmToken,
+  components,
 }: IAmityUIkitProvider) {
   const colorScheme = useColorScheme();
   const SHADE_PERCENTAGES = [0.25, 0.4, 0.45, 0.6];
@@ -119,7 +123,9 @@ export default function AmityUiKitProvider({
       >
         <ConfigProvider configs={configData}>
           <BehaviourProvider behaviour={behaviour}>
-            <PaperProvider theme={globalTheme}>{children}</PaperProvider>
+            <CustomComponentProvider components={components}>
+              <PaperProvider theme={globalTheme}>{children}</PaperProvider>
+            </CustomComponentProvider>
           </BehaviourProvider>
         </ConfigProvider>
       </AuthContextProvider>

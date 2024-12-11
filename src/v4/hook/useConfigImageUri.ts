@@ -21,6 +21,15 @@ export const useConfigImageUri = ({
     if (!fileUri) return defaultAvatarUri;
     if (fileUri.includes('http')) return fileUri;
     let image: number | string = defaultAvatarUri;
+    if (fileUri === 'logo') {
+      image = require('../configAssets/icons/logo.png');
+    }
+    if (fileUri === 'notification') {
+      image = require('../configAssets/icons/notification.png');
+    }
+    if (fileUri === 'account') {
+      image = require('../configAssets/icons/account.png');
+    }
     if (fileUri === 'mute.png') {
       image = require('../configAssets/icons/mute.png');
     }

@@ -43,6 +43,14 @@ const AmitySocialHomeTopNavigationComponent: FC<
     keys: ['text'],
   }) as string[];
 
+  const logoIcon = useConfigImageUri({
+    configPath: {
+      page: PageID.social_home_page,
+      component: ComponentID.top_navigation,
+      element: ElementID.logo_icon,
+    },
+    configKey: 'icon',
+  });
   const searchIcon = useConfigImageUri({
     configPath: {
       page: PageID.social_home_page,
@@ -69,7 +77,7 @@ const AmitySocialHomeTopNavigationComponent: FC<
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      paddingHorizontal: 24,
+      paddingHorizontal: 12,
       paddingVertical: 8,
       marginVertical: 8,
       zIndex: 1,
@@ -78,7 +86,7 @@ const AmitySocialHomeTopNavigationComponent: FC<
     title: {
       fontWeight: 'bold',
       color: theme.colors.base,
-      fontSize: 20,
+      fontSize: 18,
     },
     flexContainer: {
       flexDirection: 'row',
@@ -95,6 +103,14 @@ const AmitySocialHomeTopNavigationComponent: FC<
       height: 20,
       tintColor: theme.colors.base,
     },
+    image: {
+      width: 32,
+      height: 32,
+    },
+    headerLeft: {
+      flexDirection: 'row',
+      alignItems: 'center'
+    }
   });
 
   useFocusEffect(
@@ -102,6 +118,8 @@ const AmitySocialHomeTopNavigationComponent: FC<
       return () => setIsOpen(false);
     }, [setIsOpen])
   );
+
+  const onGoHome = useCallback(() => {}, []);
 
   const onPressSearch = useCallback(() => {
     if (myCommunitiesTab === activeTab) {
@@ -153,12 +171,20 @@ const AmitySocialHomeTopNavigationComponent: FC<
         testID={componentConfig.accessibilityId}
         accessibilityLabel={componentConfig.accessibilityId}
       >
-        <TextKeyElement
-          pageID={pageId}
-          componentID={componentId}
-          elementID={ElementID.header_label}
-          style={styles.title}
-        />
+        
+        <TouchableOpacity
+          style={styles.headerLeft}
+          onPress={onGoHome}
+        >
+          <Image source={logoIcon} style={styles.image} />
+          <TextKeyElement
+            pageID={pageId}
+            componentID={componentId}
+            elementID={ElementID.header_label}
+            style={styles.title}
+          />
+        </TouchableOpacity>
+        
 
         <View style={styles.flexContainer}>
           <TouchableOpacity
