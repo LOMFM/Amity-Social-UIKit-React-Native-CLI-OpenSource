@@ -36,6 +36,8 @@ import {
   mediaAttachment,
 } from './v4/PublicApi/types';
 
+import useAuth from './hooks/useAuth';
+
 const LINKING_ERROR =
   `The package 'amity-react-native-social-ui-kit' doesn't seem to be linked. Make sure: \n\n` +
   Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
@@ -89,4 +91,5 @@ export {
   AmityMyCommunitiesSearchPage,
   AmityPostComposerMode,
   mediaAttachment,
+  useAuth,
 };

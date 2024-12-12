@@ -29,6 +29,8 @@ const AmitySocialHomeTopNavigationComponent: FC<
   const theme = componentConfig.themeStyles;
   const { AmitySocialHomeTopNavigationComponentBehaviour } = useBehaviour();
   const { isOpen, setIsOpen, toggle } = usePopup();
+  const { goToNotificationPage, goToChatPage, goToUserProfilePage } =
+    AmitySocialHomeTopNavigationComponentBehaviour;
 
   const [myCommunitiesTab] = useUiKitConfig({
     page: PageID.social_home_page,
@@ -59,11 +61,27 @@ const AmitySocialHomeTopNavigationComponent: FC<
     },
     configKey: 'icon',
   });
-  const createIcon = useConfigImageUri({
+  const userIcon = useConfigImageUri({
     configPath: {
       page: PageID.social_home_page,
       component: ComponentID.top_navigation,
-      element: ElementID.post_creation_button,
+      element: ElementID.user_profile_button,
+    },
+    configKey: 'icon',
+  });
+  const notificationIcon = useConfigImageUri({
+    configPath: {
+      page: PageID.social_home_page,
+      component: ComponentID.top_navigation,
+      element: ElementID.notification_page_button,
+    },
+    configKey: 'icon',
+  });
+  const chatIcon = useConfigImageUri({
+    configPath: {
+      page: PageID.social_home_page,
+      component: ComponentID.top_navigation,
+      element: ElementID.chat_page_button,
     },
     configKey: 'icon',
   });
@@ -109,8 +127,8 @@ const AmitySocialHomeTopNavigationComponent: FC<
     },
     headerLeft: {
       flexDirection: 'row',
-      alignItems: 'center'
-    }
+      alignItems: 'center',
+    },
   });
 
   useFocusEffect(
@@ -171,11 +189,7 @@ const AmitySocialHomeTopNavigationComponent: FC<
         testID={componentConfig.accessibilityId}
         accessibilityLabel={componentConfig.accessibilityId}
       >
-        
-        <TouchableOpacity
-          style={styles.headerLeft}
-          onPress={onGoHome}
-        >
+        <TouchableOpacity style={styles.headerLeft} onPress={onGoHome}>
           <Image source={logoIcon} style={styles.image} />
           <TextKeyElement
             pageID={pageId}
@@ -184,7 +198,6 @@ const AmitySocialHomeTopNavigationComponent: FC<
             style={styles.title}
           />
         </TouchableOpacity>
-        
 
         <View style={styles.flexContainer}>
           <TouchableOpacity
@@ -195,14 +208,34 @@ const AmitySocialHomeTopNavigationComponent: FC<
           >
             <Image source={searchIcon} style={styles.icon} />
           </TouchableOpacity>
-          {activeTab !== exploreTab && (
+          {goToUserProfilePage && (
             <TouchableOpacity
               style={styles.iconBtn}
-              onPress={onPressCreate}
-              testID="top_navigation/post_creation_button"
-              accessibilityLabel="top_navigation/post_creation_button"
+              onPress={goToUserProfilePage}
+              testID="top_navigation/user_profile_page_button"
+              accessibilityLabel="top_navigation/user_profile_page_button"
             >
-              <Image source={createIcon} style={styles.icon} />
+              <Image source={userIcon} style={styles.icon} />
+            </TouchableOpacity>
+          )}
+          {goToNotificationPage && (
+            <TouchableOpacity
+              style={styles.iconBtn}
+              onPress={goToNotificationPage}
+              testID="top_navigation/notification_page_button"
+              accessibilityLabel="top_navigation/notification_page_button"
+            >
+              <Image source={notificationIcon} style={styles.icon} />
+            </TouchableOpacity>
+          )}
+          {goToChatPage && (
+            <TouchableOpacity
+              style={styles.iconBtn}
+              onPress={goToChatPage}
+              testID="top_navigation/chat_page_button"
+              accessibilityLabel="top_navigation/chat_page_button"
+            >
+              <Image source={chatIcon} style={styles.icon} />
             </TouchableOpacity>
           )}
         </View>

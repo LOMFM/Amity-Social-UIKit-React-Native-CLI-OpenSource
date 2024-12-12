@@ -8,6 +8,9 @@ export interface IBehaviour {
     goToGlobalSearchPage?: () => void;
     goToMyCommunitiesSearchPage?: () => void;
     onPressCreate?: () => void;
+    goToNotificationPage?: () => void;
+    goToChatPage?: () => void;
+    goToUserProfilePage?: () => void;
   };
   AmityGlobalFeedComponentBehavior?: {
     goToPostDetailPage?: (arg?: string) => void;
