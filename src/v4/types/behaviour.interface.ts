@@ -11,6 +11,7 @@ export interface IBehaviour {
     goToNotificationPage?: () => void;
     goToChatPage?: () => void;
     goToUserProfilePage?: () => void;
+    goToHome?: () => void;
   };
   AmityGlobalFeedComponentBehavior?: {
     goToPostDetailPage?: (arg?: string) => void;

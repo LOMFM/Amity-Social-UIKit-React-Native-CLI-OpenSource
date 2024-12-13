@@ -137,7 +137,11 @@ const AmitySocialHomeTopNavigationComponent: FC<
     }, [setIsOpen])
   );
 
-  const onGoHome = useCallback(() => {}, []);
+  const onGoHome = useCallback(() => {
+    if (AmitySocialHomeTopNavigationComponentBehaviour.goToHome) {
+      return AmitySocialHomeTopNavigationComponentBehaviour.goToHome();
+    }
+  }, []);
 
   const onPressSearch = useCallback(() => {
     if (myCommunitiesTab === activeTab) {
