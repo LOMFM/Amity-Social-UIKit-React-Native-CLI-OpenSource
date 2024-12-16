@@ -14,6 +14,14 @@ import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import AmityMyCommunitiesComponent from '../../Components/AmityMyCommunitiesComponent/AmityMyCommunitiesComponent';
 import AmityNewsFeedComponent from '../../Components/AmityNewsFeedComponent/AmityNewsFeedComponent';
 import NewsFeedLoadingComponent from '../../../component/NewsFeedLoadingComponent/NewsFeedLoadingComponent';
+import FloatingButton from '../../../../components/FloatingButton';
+import { usePopup } from '../../../hook/usePopup';
+import Popup from '../../../component/PopupMenu/PopupMenu';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../../routes/RouteParamList';
+import AmityCreatePostMenuComponent from '../../Components/AmityCreatePostMenuComponent/AmityCreatePostMenuComponent';
+
 LogBox.ignoreAllLogs(true);
 const AmitySocialHomePage = () => {
   const theme = useTheme() as MyMD3Theme;
@@ -40,6 +48,16 @@ const AmitySocialHomePage = () => {
   const [activeTab, setActiveTab] = useState<string>(newsFeedTab);
   const [myCommunities, setMyCommunities] = useState<Amity.Community[]>(null);
   const [pageLoading, setPageLoading] = useState(true);
+  const { isOpen, setIsOpen, toggle } = usePopup();
+  const navigation = useNavigation() as NativeStackNavigationProp<RootStackParamList>;
+  const { AmitySocialHomeTopNavigationComponentBehaviour } = useBehaviour();
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => setIsOpen(false);
+    }, [setIsOpen])
+  );
+
   useEffect(() => {
     const unsubscribe = CommunityRepository.getCommunities(
       { membership: 'member', limit: 20 },
@@ -88,6 +106,28 @@ const AmitySocialHomePage = () => {
     return null;
   };
 
+  const onToggleCreateComponent = useCallback(() => {
+    toggle();
+  }, [toggle]);
+
+  const onCreateCommunity = useCallback(() => {
+    navigation.navigate('CreateCommunity');
+  }, [navigation]);
+
+  const onPressCreate = useCallback(() => {
+    if (AmitySocialHomeTopNavigationComponentBehaviour.onPressCreate)
+      return AmitySocialHomeTopNavigationComponentBehaviour.onPressCreate();
+    if (activeTab === myCommunitiesTab) return onCreateCommunity();
+    else if(activeTab === "chatting-room") return;
+    return onToggleCreateComponent();
+  }, [
+    AmitySocialHomeTopNavigationComponentBehaviour,
+    activeTab,
+    myCommunitiesTab,
+    onCreateCommunity,
+    onToggleCreateComponent,
+  ]);
+
   return (
     <SafeAreaView
       testID="social_home_page"
@@ -105,6 +145,22 @@ const AmitySocialHomePage = () => {
         activeTab={activeTab}
       />
       {renderNewsFeed()}
+      {activeTab !== exploreTab && (<FloatingButton onPress={onPressCreate} isGlobalFeed={false} isPost={activeTab === newsFeedTab}/>)}
+
+      <Popup
+        setOpen={setIsOpen}
+        open={isOpen}
+        position={{
+          bottom: 75,
+          right: 15,
+        }}
+      >
+        <AmityCreatePostMenuComponent
+          pageId={PageID.social_home_page}
+          componentId={ComponentID.create_post_menu}
+        />
+      </Popup>
+
     </SafeAreaView>
   );
 };

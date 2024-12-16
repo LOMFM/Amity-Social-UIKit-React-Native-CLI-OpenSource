@@ -50,6 +50,7 @@ export enum ElementID {
   header_label = 'header_label',
   global_search_button = 'global_search_button',
   post_creation_button = 'post_creation_button',
+  chat_page_button = 'chat_page_button',
   newsfeed_button = 'newsfeed_button',
   explore_button = 'explore_button',
   my_communities_button = 'my_communities_button',

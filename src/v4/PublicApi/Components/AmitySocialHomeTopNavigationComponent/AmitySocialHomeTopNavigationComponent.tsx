@@ -1,7 +1,7 @@
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import React, { FC, memo, useCallback } from 'react';
 
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import {
@@ -11,10 +11,7 @@ import {
 } from '../../../hook';
 import { ComponentID, ElementID, PageID } from '../../../enum/enumUIKitID';
 import { useBehaviour } from '../../../providers/BehaviourProvider';
-import AmityCreatePostMenuComponent from '../AmityCreatePostMenuComponent/AmityCreatePostMenuComponent';
 import TextKeyElement from '../../Elements/TextKeyElement/TextKeyElement';
-import { usePopup } from '../../../hook/usePopup';
-import Popup from '../../../component/PopupMenu/PopupMenu';
 
 type AmitySocialHomeTopNavigationComponentType = {
   activeTab: string;
@@ -28,7 +25,6 @@ const AmitySocialHomeTopNavigationComponent: FC<
   const componentConfig = useAmityComponent({ pageId, componentId });
   const theme = componentConfig.themeStyles;
   const { AmitySocialHomeTopNavigationComponentBehaviour } = useBehaviour();
-  const { isOpen, setIsOpen, toggle } = usePopup();
 
   const [myCommunitiesTab] = useUiKitConfig({
     page: PageID.social_home_page,
@@ -64,6 +60,14 @@ const AmitySocialHomeTopNavigationComponent: FC<
       page: PageID.social_home_page,
       component: ComponentID.top_navigation,
       element: ElementID.post_creation_button,
+    },
+    configKey: 'icon',
+  });
+  const commentButtonIcon = useConfigImageUri({
+    configPath: {
+      page: PageID.social_home_page,
+      component: ComponentID.top_navigation,
+      element: ElementID.chat_page_button,
     },
     configKey: 'icon',
   });
@@ -113,13 +117,9 @@ const AmitySocialHomeTopNavigationComponent: FC<
     }
   });
 
-  useFocusEffect(
-    useCallback(() => {
-      return () => setIsOpen(false);
-    }, [setIsOpen])
-  );
-
-  const onGoHome = useCallback(() => {}, []);
+  const onGoHome = useCallback(() => {
+    navigation.navigate('Home');
+  }, [navigation]);
 
   const onPressSearch = useCallback(() => {
     if (myCommunitiesTab === activeTab) {
@@ -129,6 +129,8 @@ const AmitySocialHomeTopNavigationComponent: FC<
         return AmitySocialHomeTopNavigationComponentBehaviour.goToMyCommunitiesSearchPage();
       }
       return navigation.navigate('AmityMyCommunitiesSearchPage');
+    } else if ( activeTab === "chatroom"){
+      return;
     }
     if (AmitySocialHomeTopNavigationComponentBehaviour.goToGlobalSearchPage) {
       return AmitySocialHomeTopNavigationComponentBehaviour.goToGlobalSearchPage();
@@ -141,25 +143,16 @@ const AmitySocialHomeTopNavigationComponent: FC<
     navigation,
   ]);
 
-  const onToggleCreateComponent = useCallback(() => {
-    toggle();
-  }, [toggle]);
-
-  const onCreateCommunity = useCallback(() => {
-    navigation.navigate('CreateCommunity');
-  }, [navigation]);
-
-  const onPressCreate = useCallback(() => {
-    if (AmitySocialHomeTopNavigationComponentBehaviour.onPressCreate)
-      return AmitySocialHomeTopNavigationComponentBehaviour.onPressCreate();
-    if (activeTab === myCommunitiesTab) return onCreateCommunity();
-    return onToggleCreateComponent();
+  const onPressChatRoom = useCallback(() => {
+    if(activeTab === "chatting-room")
+      return;
+    if (AmitySocialHomeTopNavigationComponentBehaviour.goToChatPage) {
+      return AmitySocialHomeTopNavigationComponentBehaviour.goToChatPage();
+    }
+    // navigation.navigate('AmitySocialChatPage');
   }, [
     AmitySocialHomeTopNavigationComponentBehaviour,
-    activeTab,
-    myCommunitiesTab,
-    onCreateCommunity,
-    onToggleCreateComponent,
+    navigation,
   ]);
 
   if (componentConfig?.isExcluded) return null;
@@ -171,7 +164,7 @@ const AmitySocialHomeTopNavigationComponent: FC<
         testID={componentConfig.accessibilityId}
         accessibilityLabel={componentConfig.accessibilityId}
       >
-        
+
         <TouchableOpacity
           style={styles.headerLeft}
           onPress={onGoHome}
@@ -184,7 +177,7 @@ const AmitySocialHomeTopNavigationComponent: FC<
             style={styles.title}
           />
         </TouchableOpacity>
-        
+
 
         <View style={styles.flexContainer}>
           <TouchableOpacity
@@ -195,7 +188,7 @@ const AmitySocialHomeTopNavigationComponent: FC<
           >
             <Image source={searchIcon} style={styles.icon} />
           </TouchableOpacity>
-          {activeTab !== exploreTab && (
+          {/* {activeTab !== exploreTab && (
             <TouchableOpacity
               style={styles.iconBtn}
               onPress={onPressCreate}
@@ -204,21 +197,16 @@ const AmitySocialHomeTopNavigationComponent: FC<
             >
               <Image source={createIcon} style={styles.icon} />
             </TouchableOpacity>
-          )}
+          )} */}
+          <TouchableOpacity
+            style={styles.iconBtn}
+            onPress={onPressChatRoom}
+            testID="top_navigation/chat_page_button"
+            accessibilityLabel="top_navigation/chat_page_button"
+          >
+            <Image source={commentButtonIcon} style={styles.icon} />
+          </TouchableOpacity>
         </View>
-        <Popup
-          setOpen={setIsOpen}
-          open={isOpen}
-          position={{
-            top: 45,
-            right: 15,
-          }}
-        >
-          <AmityCreatePostMenuComponent
-            pageId={PageID.social_home_page}
-            componentId={ComponentID.create_post_menu}
-          />
-        </Popup>
       </View>
     </>
   );
