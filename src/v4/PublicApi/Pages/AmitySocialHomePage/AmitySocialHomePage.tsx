@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { LogBox, SafeAreaView } from 'react-native';
+import { useDispatch } from 'react-redux';
 import Explore from '../../../../screens/Explore';
 import CustomSocialTab from '../../../component/CustomSocialTab/CustomSocialTab';
 import { useUiKitConfig } from '../../../hook';
@@ -14,10 +15,23 @@ import { CommunityRepository } from '@amityco/ts-sdk-react-native';
 import AmityMyCommunitiesComponent from '../../Components/AmityMyCommunitiesComponent/AmityMyCommunitiesComponent';
 import AmityNewsFeedComponent from '../../Components/AmityNewsFeedComponent/AmityNewsFeedComponent';
 import NewsFeedLoadingComponent from '../../../component/NewsFeedLoadingComponent/NewsFeedLoadingComponent';
+import FloatingButton from '../../../component/FloatingButton';
+import uiSlice from '../../../../redux/slices/uiSlice';
+import useAuth from '../../../../hooks/useAuth';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../../routes/RouteParamList';
+import { plusIcon } from '../../../../svg/svg-xml-list';
+
 LogBox.ignoreAllLogs(true);
 const AmitySocialHomePage = () => {
   const theme = useTheme() as MyMD3Theme;
+  const navigation =
+    useNavigation() as NativeStackNavigationProp<RootStackParamList>;
   const { AmitySocialHomePageBehaviour } = useBehaviour();
+  const { openPostTypeChoiceModal } = uiSlice.actions;
+  const dispatch = useDispatch();
+  const { client } = useAuth();
   const [newsFeedTab] = useUiKitConfig({
     page: PageID.social_home_page,
     component: ComponentID.WildCardComponent,
@@ -65,25 +79,72 @@ const AmitySocialHomePage = () => {
     onTabChange(exploreTab);
   }, [exploreTab, onTabChange]);
 
+  const handleOnPressPostBtn = () => {
+    dispatch(
+      openPostTypeChoiceModal({
+        userId: (client as Amity.Client).userId,
+      })
+    );
+  };
+
+  const goToCreateCommunity = () => {
+    navigation.navigate('CreateCommunity');
+  };
+
   const renderNewsFeed = () => {
-    if (pageLoading) return <NewsFeedLoadingComponent />;
-    if (activeTab === exploreTab) return <Explore />;
+    if (pageLoading) {
+      return (
+        <>
+          <NewsFeedLoadingComponent />
+        </>
+      );
+    }
+    if (activeTab === exploreTab)
+      return (
+        <>
+          <Explore />
+          <FloatingButton
+            onPress={goToCreateCommunity}
+            isGlobalFeed={false}
+            icon={plusIcon('#fff')}
+          />
+        </>
+      );
     if (!myCommunities?.length)
       return (
-        <AmityEmptyNewsFeedComponent
-          pageId={PageID.social_home_page}
-          onPressExploreCommunity={onPressExploreCommunity}
-        />
+        <>
+          <AmityEmptyNewsFeedComponent
+            pageId={PageID.social_home_page}
+            onPressExploreCommunity={onPressExploreCommunity}
+          />
+          <FloatingButton
+            onPress={goToCreateCommunity}
+            isGlobalFeed={false}
+            icon={plusIcon('#fff')}
+          />
+        </>
       );
     if (activeTab === newsFeedTab) {
-      return <AmityNewsFeedComponent pageId={PageID.social_home_page} />;
+      return (
+        <>
+          <AmityNewsFeedComponent pageId={PageID.social_home_page} />
+          <FloatingButton onPress={handleOnPressPostBtn} isGlobalFeed={false} />
+        </>
+      );
     }
     if (activeTab === myCommunitiesTab)
       return (
-        <AmityMyCommunitiesComponent
-          pageId={PageID.social_home_page}
-          componentId={ComponentID.my_communities}
-        />
+        <>
+          <AmityMyCommunitiesComponent
+            pageId={PageID.social_home_page}
+            componentId={ComponentID.my_communities}
+          />
+          <FloatingButton
+            onPress={goToCreateCommunity}
+            isGlobalFeed={false}
+            icon={plusIcon('#fff')}
+          />
+        </>
       );
     return null;
   };

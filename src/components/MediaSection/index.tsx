@@ -19,11 +19,19 @@ import { RootState } from '../../redux/store';
 import { playBtn } from '../../svg/svg-xml-list';
 import PollSection from '../PollSection/PollSection';
 import LivestreamSection from '../LivestreamSection';
+import { useCustomComponent } from 'amity-react-native-social-ui-kit/src/v4/providers/ComponentsProvider';
+import { UserInterface } from '../../types';
 
 interface IMediaSection {
   childrenPosts: string[];
+  mainPostId?: string;
+  user?: UserInterface;
 }
-const MediaSection: React.FC<IMediaSection> = ({ childrenPosts }) => {
+const MediaSection: React.FC<IMediaSection> = ({
+  childrenPosts,
+  mainPostId,
+  user,
+}) => {
   const { apiRegion } = useAuth();
   const [imagePosts, setImagePosts] = useState<string[]>([]);
   const [videoPosts, setVideoPosts] = useState<IVideoPost[]>([]);
@@ -36,6 +44,7 @@ const MediaSection: React.FC<IMediaSection> = ({ childrenPosts }) => {
   const [videoPostsFullSize, setVideoPostsFullSize] = useState<MediaUri[]>([]);
   const [visibleFullImage, setIsVisibleFullImage] = useState<boolean>(false);
   const [imageIndex, setImageIndex] = useState<number>(0);
+  const { AmityLivestreamSectionComponent } = useCustomComponent();
 
   const styles = useStyles();
   let imageStyle: StyleProp<ImageStyle> | StyleProp<ImageStyle>[] =
@@ -267,7 +276,11 @@ const MediaSection: React.FC<IMediaSection> = ({ childrenPosts }) => {
       {pollIds.length > 0 ? (
         <PollSection pollId={pollIds[0].pollId} />
       ) : livestreamId.length > 0 ? (
-        <LivestreamSection streamId={livestreamId[0]} />
+        <AmityLivestreamSectionComponent
+          streamId={livestreamId[0]}
+          mainPostId={mainPostId}
+          user={user}
+        />
       ) : (
         renderMediaPosts()
       )}

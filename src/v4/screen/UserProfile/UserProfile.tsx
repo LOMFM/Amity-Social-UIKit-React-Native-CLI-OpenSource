@@ -15,8 +15,6 @@ import {
   type NativeScrollEvent,
   ScrollView,
   Pressable,
-  Alert,
-  Linking,
 } from 'react-native';
 import { useStyles } from './styles';
 import {
@@ -50,14 +48,11 @@ import GalleryComponent from '../../component/Gallery/GalleryComponent';
 import { useFile } from '../../hook';
 import { defaultAvatarUri } from '../../assets';
 import { ImageSizeState } from '../../enum';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { useCustomComponent } from 'amity-react-native-social-ui-kit/src/v4/providers/ComponentsProvider';
-import { useBehaviour } from '../../providers/BehaviourProvider';
 
 export default function UserProfile({ route }: any) {
-  const { AmitySendRefferalComponent } = useCustomComponent();
   const theme = useTheme() as MyMD3Theme;
   const styles = useStyles();
+  const { client } = useAuth();
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const { userId } = route.params;
   const { openPostTypeChoiceModal } = uiSlice.actions;
@@ -70,6 +65,7 @@ export default function UserProfile({ route }: any) {
   const [currentTab, setCurrentTab] = useState<TabName>(TabName.Timeline);
   const [socialSettings, setSocialSettings] =
     useState<Amity.SocialSettings>(null);
+  const [pendingCount, setPendingCount] = useState<number>(0);
   const { getImage } = useFile();
   const [avatar, setAvatar] = useState<string>(null);
   const isMyProfile = !followStatus;
@@ -81,17 +77,12 @@ export default function UserProfile({ route }: any) {
     !isMyProfile &&
     !isAccepted &&
     socialSettings?.userPrivacySetting === 'private';
+  const shouldShowPending = isMyProfile && pendingCount > 0;
   const feedRef: MutableRefObject<FeedRefType | null> =
     useRef<FeedRefType | null>(null);
   const galleryRef: MutableRefObject<FeedRefType | null> =
     useRef<FeedRefType | null>(null);
   const scrollViewRef = useRef(null);
-  // const route = useRoute<RouteProp<RootStackParamList, 'AgentDetail'>>();
-  // const { agent } = route.params;
-  const [agentUser, setAgentUser] = useState({});
-  const { AmityUserProfileComponentBehaviour } = useBehaviour();
-  const { loadUserInfo } = AmityUserProfileComponentBehaviour;
-  const { client } = useAuth();
 
   const onEditProfileTap = () => {
     navigation.navigate('EditProfile', {
@@ -110,49 +101,26 @@ export default function UserProfile({ route }: any) {
     await UserRepository.Relationship.unBlockUser(userId);
     setFollowStatus('none');
   };
-  const onLogout = () => {
-    // logout()
-    //   .then((res) => {
-    //     console.log("logout", res);
-    //   })
-    //   .catch((err) => {
-    //     console.log("logout failed", err);
-    //   });
-  };
-
-  useEffect(() => {
-    loadUserInfo(userId)
-      .then((_data) => {
-        setAgentUser(_data);
-      })
-      .catch(() => {});
-  }, [loadUserInfo, userId]);
-
   useLayoutEffect(() => {
     navigation.setOptions({
       // eslint-disable-next-line react/no-unstable-nested-components
-      headerRight: () =>
-        isMyProfile ? (
-          <TouchableOpacity onPress={onLogout()}>
-            <Text>LogOut</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('UserProfileSetting', {
-                user,
-                follow: followStatus,
-              });
-            }}
-          >
-            <Image
-              source={require('../../assets/icon/threeDot.png')}
-              style={styles.dotIcon}
-            />
-          </TouchableOpacity>
-        ),
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('UserProfileSetting', {
+              user,
+              follow: followStatus,
+            });
+          }}
+        >
+          <Image
+            source={require('../../assets/icon/threeDot.png')}
+            style={styles.dotIcon}
+          />
+        </TouchableOpacity>
+      ),
     });
-  }, [followStatus, isMyProfile, navigation, styles.dotIcon, user]);
+  }, [followStatus, navigation, styles.dotIcon, user]);
 
   useEffect(() => {
     (async () => {
@@ -211,7 +179,6 @@ export default function UserProfile({ route }: any) {
       unsubFollower();
     };
   }, [navigation, userId]);
-
   const editProfileButton = () => {
     return (
       <TouchableOpacity
@@ -246,6 +213,48 @@ export default function UserProfile({ route }: any) {
           xml={blockOrUnblock(theme.colors.base)}
         />
         <Text style={styles.editProfileText}>Unblock user</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  const cancelRequestButton = () => {
+    const onCancelRequest = async () => {
+      await UserRepository.Relationship.unfollow(userId);
+      setFollowStatus('none');
+    };
+    return (
+      <TouchableOpacity
+        style={styles.editProfileButton}
+        onPress={onCancelRequest}
+      >
+        <SvgXml
+          width={24}
+          height={20}
+          xml={cancelFollowRequest(theme.colors.base)}
+        />
+        <Text style={styles.editProfileText}>Cancel request</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  const pendingCountButton = () => {
+    const onPressPending = () => {
+      navigation.navigate('UserPendingRequest');
+    };
+
+    return (
+      <TouchableOpacity
+        style={styles.pendingRequestContainer}
+        onPress={onPressPending}
+      >
+        <View style={styles.rowContainer}>
+          <SvgXml xml={primaryDot(theme.colors.primary)} />
+          <Text style={styles.pendingRequestText}>Pending requests</Text>
+        </View>
+
+        <Text style={styles.pendingRequestSubText}>
+          Your requests are waiting for review
+        </Text>
       </TouchableOpacity>
     );
   };
@@ -303,8 +312,6 @@ export default function UserProfile({ route }: any) {
     if (shouldShowPrivateProfile) return renderPrivateProfile();
     if (currentTab === TabName.Timeline)
       return <Feed targetType="user" targetId={userId} ref={feedRef} />;
-    if (currentTab === TabName.SendReferral)
-      return <AmitySendRefferalComponent />;
     if (currentTab === TabName.Gallery)
       return (
         <GalleryComponent
@@ -321,74 +328,50 @@ export default function UserProfile({ route }: any) {
   }, [isAccepted, isMyProfile, navigation, user]);
   return (
     <View style={styles.container}>
-      {user ? (
-        <ScrollView
-          style={{ flex: 1 }}
-          ref={scrollViewRef}
-          onScroll={handleScroll}
-          scrollEventThrottle={20}
-        >
-          <View style={styles.profileContainer}>
-            <View style={styles.userDetail}>
-              <Image style={styles.avatar} source={{ uri: avatar }} />
-              <View style={styles.userInfo}>
-                <View style={styles.leftView}>
-                  <Text style={styles.title}>{user?.displayName}</Text>
-                  <Pressable
-                    style={styles.horizontalText}
-                    onPress={onPressFollowers}
-                  >
-                    <Text style={styles.textComponent}>
-                      {followingCount + ' Following '}
-                    </Text>
-                    <Text style={styles.textComponent}>
-                      {followerCount + ' Follower'}
-                    </Text>
-                  </Pressable>
-                  <Text style={styles.email}>{agentUser?.email}</Text>
-                  <Text style={styles.phone}>{agentUser?.phone}</Text>
-                </View>
-                <View style={styles.rightView}>
-                  <Text style={styles.recentTitle}>Recent Deals</Text>
-                  <Text style={styles.recentValue}>
-                    {agentUser ? agentUser.soldCount : '-'}
-                  </Text>
-                </View>
-              </View>
+      <ScrollView
+        style={{ flex: 1 }}
+        ref={scrollViewRef}
+        onScroll={handleScroll}
+        scrollEventThrottle={20}
+      >
+        <View style={styles.profileContainer}>
+          <View style={styles.userDetail}>
+            <Image style={styles.avatar} source={{ uri: avatar }} />
+            <View style={styles.userInfo}>
+              <Text style={styles.title}>{user?.displayName}</Text>
+              <Pressable
+                style={styles.horizontalText}
+                onPress={onPressFollowers}
+              >
+                <Text style={styles.textComponent}>
+                  {followingCount + ' Following '}
+                </Text>
+                <Text style={styles.textComponent}>
+                  {followerCount + ' Follower'}
+                </Text>
+              </Pressable>
             </View>
-            <View style={styles.descriptionContainer}>
-              {user?.description ? (
-                <Text style={styles.descriptionText}> {user?.description}</Text>
-              ) : (
-                // <Text style={styles.descriptionText}> {agentUser?.description}</Text>
-                <View />
-              )}
-            </View>
-            {renderButtons()}
           </View>
-          {!isBlocked && (
-            <>
-              <CustomTab
-                tabName={[
-                  TabName.Timeline,
-                  ...(isMyProfile
-                    ? [TabName.Gallery, TabName.SendReferral]
-                    : [TabName.Followers, TabName.Following]),
-                ]}
-                onTabChange={setCurrentTab}
-              />
-              {renderTabs()}
-            </>
-          )}
-        </ScrollView>
-      ) : (
-        <View style={styles.emptyView}>
-          <Ionicons size={56} name="person" color={'gray'} />
-          <Text style={styles.emptyViewText}>
-            Can't load user profile information.
-          </Text>
+          <View style={styles.descriptionContainer}>
+            {user?.description ? (
+              <Text style={styles.descriptionText}> {user?.description}</Text>
+            ) : (
+              <View />
+            )}
+          </View>
+          {renderButtons()}
+          {shouldShowPending && pendingCountButton()}
         </View>
-      )}
+        {!isBlocked && (
+          <>
+            <CustomTab
+              tabName={[TabName.Timeline, TabName.Gallery]}
+              onTabChange={setCurrentTab}
+            />
+            {renderTabs()}
+          </>
+        )}
+      </ScrollView>
       {(client as Amity.Client).userId === userId && (
         <FloatingButton onPress={handleOnPressPostBtn} isGlobalFeed={false} />
       )}

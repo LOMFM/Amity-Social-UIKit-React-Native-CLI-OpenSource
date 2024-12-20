@@ -12,5 +12,5 @@ export enum TabName {
   Photos = 'Photos',
   Following = 'Following',
   Followers = 'Followers',
-  SendReferral = 'SendReferral',
+  SendReferral = 'Send Referral',
 }

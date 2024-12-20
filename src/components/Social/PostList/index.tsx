@@ -475,7 +475,11 @@ export default function PostList({
             />
           )}
           {childrenPosts?.length > 0 && !editPostModalVisible && (
-            <MediaSection childrenPosts={childrenPosts} />
+            <MediaSection
+              childrenPosts={childrenPosts}
+              mainPostId={postId}
+              user={user}
+            />
           )}
         </View>
 

@@ -143,7 +143,13 @@ export default function PendingPostList({
   };
 
   const memoizedMediaSection = useMemo(() => {
-    return <MediaSection childrenPosts={childrenPosts} />;
+    return (
+      <MediaSection
+        childrenPosts={childrenPosts}
+        mainPostId={postId}
+        user={user}
+      />
+    );
   }, [childrenPosts]);
 
   async function approvePost() {

@@ -12,6 +12,7 @@ export default function UserItem({
   onPress,
   onThreeDotTap,
   hideMenu,
+  isUserAccount,
 }: {
   user: UserInterface;
   isCheckmark?: boolean;
@@ -19,6 +20,7 @@ export default function UserItem({
   onPress?: (user: UserInterface) => void;
   onThreeDotTap?: (user: UserInterface) => void;
   hideMenu?: boolean;
+  isUserAccount?: boolean;
 }) {
   const styles = useStyles();
   const { apiRegion } = useAuth();
@@ -46,6 +48,7 @@ export default function UserItem({
 
   const renderMenu = useCallback(() => {
     if (hideMenu) return null;
+    if (isUserAccount) return null;
     if (showThreeDot)
       return (
         <TouchableOpacity

@@ -143,11 +143,13 @@ const AmitySocialHomeTopNavigationComponent: FC<
       return AmitySocialHomeTopNavigationComponentBehaviour.goToHome();
     }
   }, []);
+
   const goToUserProfilePage = () => {
     navigation.navigate('UserProfile', {
       userId: (client as Amity.Client).userId,
     });
   };
+
   const onPressSearch = useCallback(() => {
     if (myCommunitiesTab === activeTab) {
       if (
