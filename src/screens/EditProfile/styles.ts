@@ -50,13 +50,14 @@ export const useStyles = () => {
       flex: 1,
       fontWeight: '600',
       fontSize: 17,
+      color: theme.colors.base,
     },
     characterCountContainer: {
       marginRight: 10,
     },
     characterCountText: {
       fontSize: 14,
-      color: 'gray',
+      color: theme.colors.baseShade1,
     },
     input: {
       width: '100%',
@@ -66,6 +67,7 @@ export const useStyles = () => {
       borderRadius: 5,
       borderColor: '#EBECEF',
       fontSize: 16,
+      color: theme.colors.baseShade1,
     },
   });
 
