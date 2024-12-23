@@ -450,11 +450,7 @@ const AmityPostContentComponent = ({
             )}
           </Pressable>
           {childrenPosts?.length > 0 && (
-            <MediaSection
-              childrenPosts={childrenPosts}
-              mainPostId={postId}
-              user={user}
-            />
+            <MediaSection childrenPosts={childrenPosts} />
           )}
         </View>
         <AmityPostEngagementActionsComponent

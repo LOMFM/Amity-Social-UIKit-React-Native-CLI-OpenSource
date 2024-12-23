@@ -11,6 +11,8 @@ import UserItem from '../../../components/UserItem';
 import { useStyles } from '../styles';
 import { TabName } from '../../../enum/tabNameState';
 import { useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 interface ICommunityMembersTab {
   activeTab: string;
@@ -30,6 +32,7 @@ const CommunityMembersTab: React.FC<ICommunityMembersTab> = ({
   const [memberList, setMemberList] = useState<Amity.Membership<'community'>[]>(
     []
   );
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const onNextPageRef = useRef<(() => void) | null>(null);
@@ -98,6 +101,7 @@ const CommunityMembersTab: React.FC<ICommunityMembersTab> = ({
           showThreeDot={true}
           onThreeDotTap={onThreeDotTap}
           hideMenu={isOwner}
+          onPress={() => {navigation.navigate('UserProfile', {userId: item.userId})}}
         />
       );
     }

@@ -25,9 +25,7 @@ export const useStyles = () => {
     dotIcon: {
       width: 16,
       height: 12,
-    },
-    logOutText: {
-      marginTop: 0,
+      tintColor: theme.colors.base,
     },
 
     followIcon: {
@@ -54,51 +52,18 @@ export const useStyles = () => {
     avatar: {
       width: 64,
       height: 64,
-      borderRadius: 32,
+      borderRadius: 72,
       marginRight: 10,
     },
     userInfo: {
-      marginLeft: 12,
+      marginLeft: 16,
       backgroundColor: theme.colors.background,
-      flex: 1,
-      flexDirection: 'row',
-    },
-    recentTitle: {
-      fontSize: 14,
-      color: theme.colors.base,
-      marginBottom: 8,
-    },
-    recentValue: {
-      fontSize: 40,
-      color: theme.colors.base,
-      fontWeight: 'bold',
-      marginBottom: 8,
     },
     title: {
       fontSize: 20,
       color: theme.colors.base,
       fontWeight: 'bold',
       marginBottom: 8,
-    },
-    email: {
-      fontSize: 14,
-      color: theme.colors.base,
-      fontWeight: 'bold',
-      marginBottom: 8,
-    },
-    phone: {
-      fontSize: 16,
-      color: theme.colors.base,
-      fontWeight: 'bold',
-      marginBottom: 8,
-    },
-    leftView: {
-      width: '60%',
-    },
-    rightView: {
-      marginTop: 10,
-      width: 100,
-      alignItems: 'center',
     },
     horizontalText: {
       flexDirection: 'row',
@@ -110,8 +75,6 @@ export const useStyles = () => {
       color: theme.colors.base,
     },
     editProfileButton: {
-      // flex: 1,
-      // backgroundColor: 'white',
       borderWidth: 1,
       borderColor: '#A5A9B5',
       padding: 8,
@@ -121,8 +84,6 @@ export const useStyles = () => {
       alignItems: 'center',
     },
     followButton: {
-      flex: 1,
-      marginHorizontal: 4,
       backgroundColor: theme.colors.primary,
       padding: 8,
       borderRadius: 4,
@@ -190,18 +151,43 @@ export const useStyles = () => {
       justifyContent: 'center',
       alignItems: 'center',
     },
-    emptyView: {
-      padding: 32,
-      minHeight: 300,
+    pendingRequestContainer: {
+      marginTop: 10,
+      backgroundColor: theme.colors.baseShade4,
+      borderRadius: 4,
       alignItems: 'center',
-      justifyContent: 'center',
+      padding: 8,
     },
-    emptyViewText: {
-      marginTop: 16,
-      fontSize: 18,
-      fontWeight: 'bold',
-      textAlign: 'center',
-      lineHeight: 30,
+    rowContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 4,
+    },
+    pendingRequestText: {
+      color: theme.colors.base,
+      fontSize: 15,
+      fontWeight: '600',
+      marginLeft: 6,
+    },
+    pendingRequestSubText: {
+      color: theme.colors.baseShade1,
+      fontSize: 13,
+    },
+    privateProfileContainer: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingVertical: width * 0.3,
+    },
+    privateAccountTitle: {
+      fontSize: 17,
+      fontWeight: '600',
+      color: theme.colors.base,
+      marginVertical: 12,
+    },
+    privateAccountSubTitle: {
+      fontSize: 15,
+      color: theme.colors.baseShade3,
     },
   });
 

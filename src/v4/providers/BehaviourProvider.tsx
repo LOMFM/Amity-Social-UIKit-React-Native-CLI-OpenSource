@@ -24,7 +24,6 @@ export const BehaviourProvider = ({
       AmityCreatePostMenuComponentBehavior: {},
       AmityPostTargetSelectionPageBehavior: {},
       AmityStoryTargetSelectionPageBehavior: {},
-      AmityUserProfileComponentBehaviour: {},
     }),
     []
   );

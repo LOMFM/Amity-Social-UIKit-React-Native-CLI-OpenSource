@@ -16,6 +16,7 @@ import TextKeyElement from '../../Elements/TextKeyElement/TextKeyElement';
 import { usePopup } from '../../../hook/usePopup';
 import Popup from '../../../component/PopupMenu/PopupMenu';
 import useAuth from '../../../../hooks/useAuth';
+
 type AmitySocialHomeTopNavigationComponentType = {
   activeTab: string;
 };
@@ -29,7 +30,7 @@ const AmitySocialHomeTopNavigationComponent: FC<
   const theme = componentConfig.themeStyles;
   const { AmitySocialHomeTopNavigationComponentBehaviour } = useBehaviour();
   const { isOpen, setIsOpen, toggle } = usePopup();
-  const { goToNotificationPage, goToChatPage } =
+  const { goToNotificationPage, goToChatPage, goToUserProfilePage } =
     AmitySocialHomeTopNavigationComponentBehaviour;
   const { client } = useAuth();
 
@@ -144,12 +145,6 @@ const AmitySocialHomeTopNavigationComponent: FC<
     }
   }, []);
 
-  const goToUserProfilePage = () => {
-    navigation.navigate('UserProfile', {
-      userId: (client as Amity.Client).userId,
-    });
-  };
-
   const onPressSearch = useCallback(() => {
     if (myCommunitiesTab === activeTab) {
       if (
@@ -219,14 +214,17 @@ const AmitySocialHomeTopNavigationComponent: FC<
           >
             <Image source={searchIcon} style={styles.icon} />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.iconBtn}
-            onPress={goToUserProfilePage}
-            testID="top_navigation/user_profile_page_button"
-            accessibilityLabel="top_navigation/user_profile_page_button"
-          >
-            <Image source={userIcon} style={styles.icon} />
-          </TouchableOpacity>
+          {goToUserProfilePage && (
+            <TouchableOpacity
+              style={styles.iconBtn}
+              // onPress={goToUserProfilePage}
+              onPress={() => {navigation.navigate('UserProfile', {userId: (client as Amity.Client)?.userId})}}
+              testID="top_navigation/user_profile_page_button"
+              accessibilityLabel="top_navigation/user_profile_page_button"
+            >
+              <Image source={userIcon} style={styles.icon} />
+            </TouchableOpacity>
+          )}
           {goToNotificationPage && (
             <TouchableOpacity
               style={styles.iconBtn}

@@ -16,9 +16,6 @@ export interface IBehaviour {
   AmityGlobalFeedComponentBehavior?: {
     goToPostDetailPage?: (arg?: string) => void;
   };
-  AmityUserProfileComponentBehaviour?: {
-    loadUserInfo?: (userId: string) => Promise<any>;
-  };
   AmityPostContentComponentBehavior?: {
     goToCommunityProfilePage?: (arg?: {
       communityId?: string;

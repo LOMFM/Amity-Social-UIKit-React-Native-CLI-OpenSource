@@ -46,14 +46,11 @@ import CreateLivestream from '../../screens/CreateLivestream/CreateLivestream';
 import PostTargetSelection from '../screen/PostTargetSelection';
 import StoryTargetSelection from '../PublicApi/Pages/AmityStoryTargetSelectionPage/AmityStoryTargetSelectionPage';
 import EditPost from '../screen/EditPost/EditPost';
-import { useCustomComponent } from '../providers/ComponentsProvider';
-import LivestreamPlayer from '../../screens/LivestreamPlayer';
 
 export default function AmitySocialUIKitV4Navigator() {
   const Stack = createNativeStackNavigator<RootStackParamList>();
   const { isConnected } = useAuth();
   const theme = useTheme() as MyMD3Theme;
-  const { AmityCreateStreamComponent, AmityUserProfileComponent } = useCustomComponent();
 
   const styles = useStyles();
   return (
@@ -220,7 +217,7 @@ export default function AmitySocialUIKitV4Navigator() {
           />
           <Stack.Screen
             name="UserProfile"
-            component={AmityUserProfileComponent || UserProfile}
+            component={UserProfile}
             options={{
               title: '',
               headerLeft: () => <BackButton />,
@@ -291,12 +288,7 @@ export default function AmitySocialUIKitV4Navigator() {
             />
             <Stack.Screen
               name="CreateLivestream"
-              component={AmityCreateStreamComponent}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="LivestreamPlayer"
-              component={LivestreamPlayer}
+              component={CreateLivestream}
               options={{ headerShown: false }}
             />
           </Stack.Group>
