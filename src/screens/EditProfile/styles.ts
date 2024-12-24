@@ -12,7 +12,6 @@ export const useStyles = () => {
       // justifyContent: 'center',
       paddingHorizontal: 16,
       backgroundColor: theme.colors.background,
-
     },
     avatarContainer: {
       position: 'relative',
@@ -58,7 +57,7 @@ export const useStyles = () => {
     },
     characterCountText: {
       fontSize: 14,
-      color: 'gray',
+      color: theme.colors.baseShade1,
     },
     input: {
       width: '100%',
@@ -68,7 +67,7 @@ export const useStyles = () => {
       borderRadius: 5,
       borderColor: '#EBECEF',
       fontSize: 16,
-      color: theme.colors.base,
+      color: theme.colors.baseShade1,
     },
   });
 

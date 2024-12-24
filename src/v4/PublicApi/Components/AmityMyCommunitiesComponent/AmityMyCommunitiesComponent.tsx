@@ -19,7 +19,6 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import { formatNumber } from '../../../../util/numberUtil';
 import ContentLoader, { Circle, Rect } from 'react-content-loader/native';
-import FloatingButton from '../../../../components/FloatingButton';
 type AmityMyCommunitiesComponentType = {
   pageId?: PageID;
   componentId?: ComponentID;
@@ -147,10 +146,6 @@ const AmityMyCommunitiesComponent: FC<AmityMyCommunitiesComponentType> = ({
 
   if (isExcluded) return null;
 
-  const onPressCreate = () => {
-    navigation.navigate('CreateCommunity');
-  }
-
   return (
     <View
       style={styles.container}
@@ -158,17 +153,14 @@ const AmityMyCommunitiesComponent: FC<AmityMyCommunitiesComponentType> = ({
       accessibilityLabel={accessibilityId}
     >
       {communities?.length ? (
-        <View>
-          <FlatList
-            onEndReached={() => {
-              onNextCommunityPage && onNextCommunityPage();
-            }}
-            data={communities}
-            renderItem={myCommunitiesListItem}
-            keyExtractor={(item, index) => item.communityId + index}
-          />
-          <FloatingButton onPress={onPressCreate}/>
-        </View>
+        <FlatList
+          onEndReached={() => {
+            onNextCommunityPage && onNextCommunityPage();
+          }}
+          data={communities}
+          renderItem={myCommunitiesListItem}
+          keyExtractor={(item, index) => item.communityId + index}
+        />
       ) : (
         renderContentLoading()
       )}

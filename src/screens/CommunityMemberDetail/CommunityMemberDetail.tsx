@@ -69,7 +69,7 @@ export default function CommunityMemberDetail({ navigation, route }: any) {
         onSelect={onSelectMember}
         onClose={() => setAddMembersModal(false)}
         visible={addMembersModal}
-        initUserList={[]}
+        initUserList={member}
         excludeUserList={member}
       />
       <MemberActionModal

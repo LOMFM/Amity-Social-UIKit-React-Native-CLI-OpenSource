@@ -7,10 +7,12 @@ import { styles } from './styles';
 interface IFloatingButton {
   onPress: () => any;
   isGlobalFeed?: boolean;
+  icon?: string;
 }
 export default function FloatingButton({
   onPress,
   isGlobalFeed = true,
+  icon,
 }: IFloatingButton) {
   return (
     <View style={!isGlobalFeed ? styles.otherFeedContainer : styles.container}>
@@ -20,7 +22,7 @@ export default function FloatingButton({
         }}
         style={styles.button}
       >
-        <SvgXml xml={postIcon('#FFFFFF')} width="30" height="30" />
+        <SvgXml xml={icon || postIcon('#FFFFFF')} width="30" height="30" />
       </Pressable>
     </View>
   );
