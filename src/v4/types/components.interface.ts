@@ -11,5 +11,9 @@ export interface ICustomComponents {
     mainPostId: string;
     user: UserInterface;
   }>;
-  AmityUserProfileComponent: React.FC<{ route: any }>
+  AmityUserProfileComponent: React.FC<{ route: any }>;
+  AmityEditProfileComponent?: React.FC<{
+    navigation: any;
+    route: any;
+  }>;
 }

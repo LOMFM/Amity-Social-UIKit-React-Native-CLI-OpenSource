@@ -1,5 +1,5 @@
 import React, { FC, memo, useCallback, useRef, useState } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, Text, View } from 'react-native';
 import useAuth from '../../../../hooks/useAuth';
 import { useStyle } from './styles';
 import { amityPostsFormatter } from '../../../../util/postDataFormatter';
@@ -18,13 +18,16 @@ import AmityStoryTabComponent from '../AmityStoryTabComponent/AmityStoryTabCompo
 import { AmityStoryTabComponentEnum } from '../../types';
 import { FeedRepository, PostRepository } from '@amityco/ts-sdk-react-native';
 import { usePostImpression } from '../../../../v4/hook/usePostImpression';
+import AmityEmptyNewsFeedComponent from 'amity-react-native-social-ui-kit/src/v4/PublicApi/Components/AmityEmptyNewsFeedComponent/AmityEmptyNewsFeedComponent';
 
 type AmityGlobalFeedComponentType = {
   pageId?: PageID;
+  onEmpty: VoidFunction;
 };
 
 const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   pageId,
+  onEmpty,
 }) => {
   const componentId = ComponentID.global_feed_component;
   const { isExcluded, themeStyles, accessibilityId } = useAmityComponent({
@@ -42,6 +45,7 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
   const [postData, setPostData] = useState<{ data: any; nextPage: string }>();
   const { data: posts = [], nextPage } = postData ?? {};
   const flatListRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const getGlobalFeedList = async (queryToken?: string) => {
     const {
@@ -78,6 +82,7 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
       }
     }, [isConnected])
   );
+
   const getPostList = useCallback(async () => {
     if (posts.length > 0) {
       //filter image and video post. remove this later
@@ -111,6 +116,9 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
       const filteredResult = results.filter((result) => result !== null);
       const formattedPostList = await amityPostsFormatter(filteredResult);
       dispatch(updateGlobalFeed(formattedPostList));
+      setIsLoading(false);
+    } else {
+      setIsLoading(false);
     }
   }, [dispatch, posts, updateGlobalFeed]);
 
@@ -159,6 +167,18 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
           />
         )
       }
+      ListEmptyComponent={
+        !isLoading &&
+        !refreshing && (
+          <View style={styles.emptyContainer}>
+            <AmityEmptyNewsFeedComponent
+              pageId={PageID.social_home_page}
+              onPressExploreCommunity={onEmpty}
+            />
+          </View>
+        )
+      }
+      contentContainerStyle={!postList.length ? styles.feedContentStyle : {}}
       viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
       onViewableItemsChanged={handleViewChange}
       extraData={postList}

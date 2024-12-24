@@ -53,7 +53,11 @@ export default function AmitySocialUIKitV4Navigator() {
   const Stack = createNativeStackNavigator<RootStackParamList>();
   const { isConnected } = useAuth();
   const theme = useTheme() as MyMD3Theme;
-  const { AmityCreateStreamComponent, AmityUserProfileComponent } = useCustomComponent();
+  const {
+    AmityCreateStreamComponent,
+    AmityUserProfileComponent,
+    AmityEditProfileComponent,
+  } = useCustomComponent();
 
   const styles = useStyles();
   return (
@@ -226,7 +230,10 @@ export default function AmitySocialUIKitV4Navigator() {
               headerLeft: () => <BackButton />,
             }}
           />
-          <Stack.Screen name="EditProfile" component={EditProfile} />
+          <Stack.Screen
+            name="EditProfile"
+            component={AmityEditProfileComponent || EditProfile}
+          />
           <Stack.Screen
             name="EditCommunity"
             component={EditCommunity}

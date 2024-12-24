@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { LogBox, SafeAreaView } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Explore from '../../../../screens/Explore';
 import CustomSocialTab from '../../../component/CustomSocialTab/CustomSocialTab';
 import { useUiKitConfig } from '../../../hook';
@@ -22,6 +22,8 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import { plusIcon } from '../../../../svg/svg-xml-list';
+import { RootState } from '../../../../redux/store';
+import { IPost } from '../../../../components/Social/PostList';
 
 LogBox.ignoreAllLogs(true);
 const AmitySocialHomePage = () => {
@@ -32,6 +34,11 @@ const AmitySocialHomePage = () => {
   const { openPostTypeChoiceModal } = uiSlice.actions;
   const dispatch = useDispatch();
   const { client } = useAuth();
+
+  const { postList } = useSelector(
+    (state: RootState) => state.globalFeed as { postList: IPost[] }
+  );
+
   const [newsFeedTab] = useUiKitConfig({
     page: PageID.social_home_page,
     component: ComponentID.WildCardComponent,
@@ -127,7 +134,10 @@ const AmitySocialHomePage = () => {
     if (activeTab === newsFeedTab) {
       return (
         <>
-          <AmityNewsFeedComponent pageId={PageID.social_home_page} />
+          <AmityNewsFeedComponent
+            pageId={PageID.social_home_page}
+            onEmpty={onPressExploreCommunity}
+          />
           <FloatingButton onPress={handleOnPressPostBtn} isGlobalFeed={false} />
         </>
       );

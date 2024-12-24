@@ -6,10 +6,12 @@ import AmityGlobalFeedComponent from '../AmityGlobalFeedComponent/AmityGlobalFee
 
 type AmityNewsFeedComponentType = {
   pageId?: PageID;
+  onEmpty?: VoidFunction;
 };
 
 const AmityNewsFeedComponent: FC<AmityNewsFeedComponentType> = ({
   pageId = PageID.WildCardPage,
+  onEmpty,
 }) => {
   const { excludes } = useConfig();
   const componentId = ComponentID.newsfeed_component;
@@ -19,7 +21,7 @@ const AmityNewsFeedComponent: FC<AmityNewsFeedComponentType> = ({
 
   return (
     <View testID={uiReference} accessibilityLabel={uiReference}>
-      <AmityGlobalFeedComponent pageId={pageId} />
+      <AmityGlobalFeedComponent pageId={pageId} onEmpty={onEmpty} />
     </View>
   );
 };

@@ -13,4 +13,6 @@ export enum TabName {
   Following = 'Following',
   Followers = 'Followers',
   SendReferral = 'Send Referral',
+  Community = 'Community',
+  Other = 'Other'
 }
