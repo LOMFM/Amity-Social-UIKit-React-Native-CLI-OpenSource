@@ -118,9 +118,9 @@ const AmityGlobalFeedComponent: FC<AmityGlobalFeedComponentType> = ({
       dispatch(updateGlobalFeed(formattedPostList));
       setIsLoading(false);
     } else {
-      setIsLoading(false);
+      postData && setIsLoading(false);
     }
-  }, [dispatch, posts, updateGlobalFeed]);
+  }, [dispatch, posts, updateGlobalFeed, postData]);
 
   useFocusEffect(
     useCallback(() => {

@@ -10,8 +10,9 @@ export const useStyles = () => {
       marginTop: 10,
       width: width,
       maxHeight: 170,
-      top: 0,
-      backgroundColor: 'transparent',
+      bottom: '100%',
+      backgroundColor: theme.colors.baseShade3,
+      position: 'absolute',
     },
     avatar: {
       width: 30,

@@ -227,25 +227,29 @@ const AddMembersModal = ({
             </TouchableOpacity>
           )}
         </View>
-        {selectedUserList.length > 0 ? (
-          <SelectedUserHorizontal
-            users={selectedUserList}
-            onDeleteUserPressed={onDeleteUserPressed}
-          />
-        ) : (
-          <View />
-        )}
-        {sectionedGroupUserList && (
-          <SectionList
-            sections={sectionedGroupUserList}
-            renderItem={renderItem}
-            onScroll={handleScroll}
-            renderSectionHeader={renderSectionHeader}
-            onEndReached={handleLoadMore}
-            onEndReachedThreshold={0.8}
-            keyExtractor={(item) => item.userId}
-          />
-        )}
+        <View>
+          {selectedUserList.length > 0 ? (
+            <SelectedUserHorizontal
+              users={selectedUserList}
+              onDeleteUserPressed={onDeleteUserPressed}
+            />
+          ) : (
+            <View />
+          )}
+        </View>
+        <View>
+          {sectionedGroupUserList && (
+            <SectionList
+              sections={sectionedGroupUserList}
+              renderItem={renderItem}
+              onScroll={handleScroll}
+              renderSectionHeader={renderSectionHeader}
+              onEndReached={handleLoadMore}
+              onEndReachedThreshold={0.8}
+              keyExtractor={(item) => item.userId}
+            />
+          )}
+        </View>
       </View>
     </Modal>
   );
