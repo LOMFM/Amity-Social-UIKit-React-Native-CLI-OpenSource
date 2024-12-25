@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
-import { LogBox, SafeAreaView } from 'react-native';
+import { LogBox } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import Explore from '../../../../screens/Explore';
 import CustomSocialTab from '../../../component/CustomSocialTab/CustomSocialTab';
@@ -24,6 +24,7 @@ import { RootStackParamList } from '../../../routes/RouteParamList';
 import { plusIcon } from '../../../../svg/svg-xml-list';
 import { RootState } from '../../../../redux/store';
 import { IPost } from '../../../../components/Social/PostList';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 LogBox.ignoreAllLogs(true);
 const AmitySocialHomePage = () => {
