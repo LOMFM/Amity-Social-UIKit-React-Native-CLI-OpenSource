@@ -142,6 +142,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         userDetail.avatarCustomUrl = file[0].fileUrl;
       }
       await UserRepository.updateUser(user.userId, userDetail);
+      navigation.navigate('UserProfile', {userId: user.userId});
     } catch (error) {
       console.error(error);
     } finally {

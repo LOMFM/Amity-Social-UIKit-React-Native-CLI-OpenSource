@@ -117,6 +117,7 @@ const EditCommunity = ({ navigation, route }) => {
   }, [apiRegion, data.avatarFileId]);
 
   const uploadFile = useCallback(async () => {
+    setLoading(true);
     try {
       const file: Amity.File<any>[] = await uploadImageFile(image);
       if (file) {
@@ -127,13 +128,14 @@ const EditCommunity = ({ navigation, route }) => {
     } finally {
       setLoading(false);
     }
+    setLoading(false);
   }, [image]);
 
   useEffect(() => {
-    if (image) {
-      setLoading(true);
+    // if (image) {
+    //   setLoading(true);
       uploadFile();
-    }
+    // }
   }, [image, uploadFile]);
 
   const pickImage = async () => {
