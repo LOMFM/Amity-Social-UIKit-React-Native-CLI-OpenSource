@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { postIcon } from '../../../svg/svg-xml-list';
-import { styles } from './styles';
+import { useStyle } from './styles';
 
 interface IFloatingButton {
   onPress: () => any;
@@ -14,6 +14,7 @@ export default function FloatingButton({
   isGlobalFeed = true,
   icon,
 }: IFloatingButton) {
+  const styles = useStyle();
   return (
     <View style={!isGlobalFeed ? styles.otherFeedContainer : styles.container}>
       <Pressable
