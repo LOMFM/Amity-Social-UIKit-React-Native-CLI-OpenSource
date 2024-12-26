@@ -4,7 +4,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -57,6 +56,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/RouteParamList';
 import { PostRepository, UserRepository } from '@amityco/ts-sdk-react-native';
 import { useFile } from '../../../hook';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const AmityPostComposerPage: FC<AmityPostComposerPageType> = ({
   mode,
